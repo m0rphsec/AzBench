@@ -48,7 +48,15 @@ Every check resolves to exactly one Status:
 
 The script supports three. **Service Principal is what we proved works in restrictive environments** (Conditional Access blocking interactive flows, locked-down endpoints, etc.) and is what we recommend for production use.
 
-### Flow A: Service Principal (recommended for production / restrictive environments)
+### Flow A: Interactive user (your own workstation, no Conditional Access friction)
+
+```powershell
+.\Invoke-AzBench.ps1
+```
+
+The script handles browser-based sign-in for both Az and Microsoft Graph, installs missing modules to `CurrentUser` scope on first run, and consents to the required Graph delegated scopes.
+
+### Flow B: Service Principal (recommended for production / restrictive environments)
 
 This is the only flow we've seen survive Conditional Access policies that require compliant devices, regardless of where you launch from.
 
@@ -102,14 +110,6 @@ Connect-MgGraph   -TenantId $tenantId -ClientSecretCredential $cred -NoWelcome
 Either path runs in ~5-30 minutes depending on tenant size. No prompts, no device codes.
 
 **Rotate the secret** the moment you're done. Treat any secret that has been pasted into a console or saved anywhere as tainted.
-
-### Flow B: Interactive user (your own workstation, no Conditional Access friction)
-
-```powershell
-.\Invoke-AzBench.ps1
-```
-
-The script handles browser-based sign-in for both Az and Microsoft Graph, installs missing modules to `CurrentUser` scope on first run, and consents to the required Graph delegated scopes.
 
 ### Flow C: Azure Cloud Shell (`-CloudShell`)
 
